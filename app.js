@@ -45,6 +45,9 @@ app.configure('development', function(){
 
 app.get('/', routes.index);
 io.sockets.on("connection", function (socket) {
+	socket.on('draw', function (data) {
+		socket.broadcast.emit("redraw", data);
+	});
 });
 
 server.listen(app.get('port'), function(){

@@ -4,6 +4,7 @@ var App = function () {
 	var context = canvas.getContext('2d');
 	self.initialize = function () {
 		listenToMouse();
+		listenToRedraw();
 	};
 	var listenToMouse = function () {
 		canvas.addEventListener("mousedown", function (e) {
@@ -11,9 +12,15 @@ var App = function () {
 				var mousePos = getMousePos(canvas, evt);
 				var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
 				drawCircle(mousePos.x, mousePos.y);
-				console.log(message);
+				socket.emit("draw", {x: mousePos.x, y: mousePos.y});
 			}, false);
 		}, false);
+	};
+
+	var listenToRedraw = function () {
+		socket.on("redraw", function (data) {
+			drawCircle(data.x, data.y);
+		});
 	};
 
 	var drawCircle = function (x, y) {
